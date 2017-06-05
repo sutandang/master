@@ -539,29 +539,40 @@ function user_auto_login()
 	return $output;
 }
 /*
+fetch all available modules based on filename
+*/
+function user_modules($file='_function')
+{
+	global $Bbc;
+	_ext($file);
+	$id = menu_save('module_'.$file);
+	if (empty($Bbc->$id))
+	{
+		$Bbc->$id    = array();
+		$path        = _ROOT.'modules/';
+		$all_modules = _func('path', 'list', $path);
+		foreach ($all_modules as $mod)
+		{
+			if (file_exists($path.$mod.'/'.$file))
+			{
+				include_once $path.$mod.'/'.$file;
+				$Bbc->$id[] = $mod;
+			}
+		}
+	}
+	return $Bbc->$id;
+}
+/*
 execute all functions with 'function_name' AS postfix in all modules
 user_call_func('function_name'[, $arg1[, $arg2]]);
 */
 function user_call_func()
 {
-	global $Bbc;
 	$path = _ROOT.'modules/';
-	if (empty($Bbc->modules_func))
-	{
-		$Bbc->modules_func = array();
-		$all_modules       = _func('path', 'list', $path);
-		foreach ($all_modules as $mod)
-		{
-			if (file_exists($path.$mod.'/_function.php'))
-			{
-				include_once $path.$mod.'/_function.php';
-				$Bbc->modules_func[] = $mod;
-			}
-		}
-	}
+	$mods = user_modules();
 	$args = func_get_args();
 	$func = array_shift($args);
-	foreach ($Bbc->modules_func as $mod)
+	foreach ($mods as $mod)
 	{
 		if (function_exists($mod.'_'.$func))
 		{
@@ -576,21 +587,8 @@ boolean user_call_func_validate('function_name'[, $arg1[, $arg2]]);
 */
 function user_call_func_validate()
 {
-	global $Bbc;
 	$path = _ROOT.'modules/';
-	if (empty($Bbc->modules_func))
-	{
-		$Bbc->modules_func = array();
-		$all_modules       = _func('path', 'list', $path);
-		foreach ($all_modules as $mod)
-		{
-			if (file_exists($path.$mod.'/_function.php'))
-			{
-				include_once $path.$mod.'/_function.php';
-				$Bbc->modules_func[] = $mod;
-			}
-		}
-	}
+	$mods = user_modules();
 	$args = func_get_args();
 	$func = array_shift($args);
 	$out  = true;

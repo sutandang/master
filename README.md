@@ -1,10 +1,10 @@
 * Framework
-- Modules
-	- Page
-	- Library
-		- Function
-		- Class
-		- Developer Tools
+	- Modules
+		- Page
+		- Library
+			- Function
+			- Class
+			- Developer Tools
 	- Block
 	- Templates
 		- Layout

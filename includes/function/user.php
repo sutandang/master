@@ -592,7 +592,7 @@ function user_call_func_validate()
 	$args = func_get_args();
 	$func = array_shift($args);
 	$out  = true;
-	foreach ($Bbc->modules_func as $mod)
+	foreach ($mods as $mod)
 	{
 		if (function_exists($mod.'_'.$func))
 		{
